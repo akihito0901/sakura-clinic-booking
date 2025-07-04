@@ -1,4 +1,4 @@
-import { MenuItem, BusinessHours } from '@/types/booking';
+import { MenuItem, BusinessHours, EyeCareOption } from '@/types/booking';
 
 export const MENU_ITEMS: MenuItem[] = [
   {
@@ -25,7 +25,7 @@ export const MENU_ITEMS: MenuItem[] = [
 ];
 
 // 眼精疲労オプション
-export const EYE_CARE_OPTION = {
+export const EYE_CARE_OPTION: EyeCareOption = {
   name: '眼精疲労ケア',
   priceFirst: 1000,
   priceRegular: 1500,

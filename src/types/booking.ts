@@ -33,3 +33,10 @@ export interface BusinessHours {
   lunchEnd?: string;   // "15:00"
   closedDays: number[]; // [0] = 日曜日
 }
+
+export interface EyeCareOption {
+  name: string;
+  priceFirst: number;
+  priceRegular: number;
+  description: string;
+}
