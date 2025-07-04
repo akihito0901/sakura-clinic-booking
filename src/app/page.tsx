@@ -138,31 +138,35 @@ export default function BookingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
       {/* ヘッダー */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-4xl mx-auto px-4 py-6">
-          <h1 className="text-2xl font-bold text-gray-900 text-center mb-6">
-            桜並木駅前の整骨院 - 予約システム
-          </h1>
+      <header className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-pink-100">
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <div className="text-center">
+            <div className="text-3xl mb-2">🌸</div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-2">
+              桜並木駅前の整骨院
+            </h1>
+            <p className="text-gray-600 text-lg">オンライン予約システム</p>
+          </div>
           
           {/* プログレスバー */}
           {currentStep !== 'confirmation' && (
-            <div className="max-w-md mx-auto">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-blue-600">
+            <div className="max-w-md mx-auto mt-8">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-sm font-medium text-pink-600">
                   ステップ {getStepNumber()} / {getTotalSteps()}
                 </span>
                 <span className="text-sm text-gray-500">
-                  {currentStep === 'menu' && 'メニュー選択'}
-                  {currentStep === 'date' && '日付選択'}
-                  {currentStep === 'time' && '時間選択'}
-                  {currentStep === 'form' && '情報入力'}
+                  {currentStep === 'menu' && '✨ メニュー選択'}
+                  {currentStep === 'date' && '📅 日付選択'}
+                  {currentStep === 'time' && '⏰ 時間選択'}
+                  {currentStep === 'form' && '📝 情報入力'}
                 </span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="w-full bg-gray-200 rounded-full h-3">
                 <div
-                  className="bg-blue-500 h-2 rounded-full transition-all duration-300"
+                  className="bg-gradient-to-r from-pink-500 to-rose-500 h-3 rounded-full transition-all duration-500 shadow-sm"
                   style={{ width: `${(getStepNumber() / getTotalSteps()) * 100}%` }}
                 ></div>
               </div>
@@ -181,11 +185,13 @@ export default function BookingPage() {
         )}
 
         {currentStep === 'date' && selectedMenu && (
-          <div className="space-y-6">
+          <div className="space-y-8">
             <div className="text-center">
-              <h2 className="text-xl font-bold text-gray-800 mb-2">日付を選択してください</h2>
-              <div className="text-gray-600">
-                選択した施術: <span className="font-medium text-blue-600">{selectedMenu.name}</span>
+              <div className="text-2xl mb-3">📅</div>
+              <h2 className="text-2xl font-bold text-gray-800 mb-3">ご希望の日付を選択してください</h2>
+              <div className="text-gray-600 bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-pink-100">
+                選択した施術: <span className="font-medium text-pink-600">{selectedMenu.name}</span>
+                ({selectedMenu.duration}分)
               </div>
             </div>
             <Calendar
@@ -195,7 +201,7 @@ export default function BookingPage() {
             <div className="text-center">
               <button
                 onClick={handleBack}
-                className="px-6 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                className="px-6 py-3 text-gray-600 hover:text-gray-800 transition-all duration-200 rounded-lg hover:bg-white/50"
               >
                 ← メニュー選択に戻る
               </button>
@@ -204,7 +210,7 @@ export default function BookingPage() {
         )}
 
         {currentStep === 'time' && selectedDate && selectedMenu && (
-          <div className="space-y-6">
+          <div className="space-y-8">
             <TimeSlots
               selectedDate={selectedDate}
               selectedMenu={selectedMenu}
@@ -215,7 +221,7 @@ export default function BookingPage() {
             <div className="text-center">
               <button
                 onClick={handleBack}
-                className="px-6 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                className="px-6 py-3 text-gray-600 hover:text-gray-800 transition-all duration-200 rounded-lg hover:bg-white/50"
               >
                 ← 日付選択に戻る
               </button>

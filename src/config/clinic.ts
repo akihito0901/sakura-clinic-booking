@@ -6,44 +6,31 @@ export const MENU_ITEMS: MenuItem[] = [
     name: '初回無料体験',
     duration: 60,
     price: 0,
-    description: '一般施術・産後骨盤矯正対応（60分・完全無料）'
+    description: 'どんな施術も体験できます！完全無料でじっくり60分'
   },
   {
     id: 'general-regular',
-    name: '一般施術（2回目以降）',
+    name: '一般施術',
     duration: 15,
     price: 800,
-    description: '15分・保険800円'
+    description: '肩こり・腰痛などの一般的な症状に対応'
   },
   {
     id: 'postnatal-regular',
-    name: '産後骨盤矯正（2回目以降）',
+    name: '産後骨盤矯正',
     duration: 60,
-    price: 0,
-    description: '60分・サブスク料金のみ'
-  },
-  {
-    id: 'eye-care-first',
-    name: '眼精疲労ケア（初回）',
-    duration: 30,
-    price: 1800,
-    description: '30分・眼精疲労1,000円 + 保険800円'
-  },
-  {
-    id: 'eye-care-coupon',
-    name: '眼精疲労ケア（回数券）',
-    duration: 30,
-    price: 800,
-    description: '30分・保険800円のみ'
-  },
-  {
-    id: 'eye-care-single',
-    name: '眼精疲労ケア（単発）',
-    duration: 30,
-    price: 2300,
-    description: '30分・保険800円 + 単発1,500円'
+    price: null, // 料金表示なし
+    description: '産後の骨盤の歪みをしっかりと整えます'
   }
 ];
+
+// 眼精疲労オプション
+export const EYE_CARE_OPTION = {
+  name: '眼精疲労ケア',
+  priceFirst: 1000,
+  priceRegular: 1500,
+  description: 'PC作業による目の疲れ・頭痛の改善'
+};
 
 export const BUSINESS_HOURS: BusinessHours = {
   start: '10:00',

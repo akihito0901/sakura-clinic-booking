@@ -38,8 +38,15 @@ export default function TimeSlots({
     const lunchStartTime = hours.lunchStart ? parseTime(hours.lunchStart) : null;
     const lunchEndTime = hours.lunchEnd ? parseTime(hours.lunchEnd) : null;
     
-    // 15分間隔でタイムスロットを生成
-    for (let time = startTime; time < endTime; time += 15) {
+    // 初回無料体験は30分刻み、その他は15分刻み
+    const interval = selectedMenu.id === 'first-free' ? 30 : 15;
+    
+    for (let time = startTime; time < endTime; time += interval) {
+      // 初回無料体験は00分・30分のみ
+      if (selectedMenu.id === 'first-free') {
+        const minutes = time % 60;
+        if (minutes !== 0 && minutes !== 30) continue;
+      }
       const timeString = formatTime(time);
       const endTimeForSlot = time + selectedMenu.duration;
       
@@ -92,13 +99,14 @@ export default function TimeSlots({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
-      <div className="mb-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-2">時間を選択</h3>
+    <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-pink-100">
+      <div className="mb-8 text-center">
+        <div className="text-2xl mb-3">⏰</div>
+        <h3 className="text-2xl font-bold text-gray-800 mb-3">時間を選択</h3>
         <div className="text-gray-600">
-          <div>{formatDateDisplay(selectedDate)}</div>
-          <div className="text-sm mt-1">
-            施術内容: <span className="font-medium text-blue-600">{selectedMenu.name}</span>
+          <div className="text-lg font-medium">{formatDateDisplay(selectedDate)}</div>
+          <div className="text-sm mt-2">
+            施術内容: <span className="font-medium text-pink-600">{selectedMenu.name}</span>
             （{selectedMenu.duration}分）
           </div>
         </div>
@@ -115,11 +123,11 @@ export default function TimeSlots({
               onClick={() => slot.available && onTimeSlotSelect(slot.time)}
               disabled={!slot.available}
               className={`
-                p-4 rounded-lg border-2 transition-all duration-200 text-center
+                p-4 rounded-xl border-2 transition-all duration-300 text-center transform hover:scale-105
                 ${isSelected
-                  ? 'border-blue-500 bg-blue-500 text-white shadow-lg transform scale-105'
+                  ? 'border-pink-500 bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-lg'
                   : slot.available
-                    ? 'border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-50 text-gray-800'
+                    ? 'border-gray-200 bg-white hover:border-pink-300 hover:bg-pink-50 text-gray-800'
                     : 'border-gray-100 bg-gray-50 text-gray-400 cursor-not-allowed'
                 }
               `}
@@ -149,7 +157,7 @@ export default function TimeSlots({
       <div className="mt-6 bg-gray-50 p-4 rounded-lg">
         <div className="text-sm text-gray-600">
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-4 h-4 bg-blue-500 rounded"></div>
+            <div className="w-4 h-4 bg-gradient-to-r from-pink-500 to-rose-500 rounded"></div>
             <span>選択中の時間</span>
           </div>
           <div className="flex items-center gap-2 mb-2">
