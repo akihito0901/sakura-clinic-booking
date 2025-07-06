@@ -12,8 +12,8 @@ export const MENU_ITEMS: MenuItem[] = [
     id: 'general-regular',
     name: '一般施術',
     duration: 15,
-    price: 2800,
-    description: '肩こり・腰痛などの一般的な症状に対応（初診料2000円＋施術料800円）'
+    price: 800,
+    description: '肩こり・腰痛などの一般的な症状に対応（初診料2000円、2回目以降800円）'
   },
   {
     id: 'postnatal-regular',
