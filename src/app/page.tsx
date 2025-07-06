@@ -60,7 +60,6 @@ export default function BookingPage() {
   const handleBookingSubmit = async (formData: {
     customerName: string;
     customerPhone: string;
-    customerEmail: string;
     notes: string;
   }) => {
     if (!selectedMenu || !selectedDate || !selectedTimeSlot) return;

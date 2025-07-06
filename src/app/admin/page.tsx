@@ -45,41 +45,6 @@ export default function AdminPage() {
     return `${endHours.toString().padStart(2, '0')}:${endMins.toString().padStart(2, '0')}`;
   };
 
-  const createTestBooking = async () => {
-    try {
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      const testDate = tomorrow.toISOString().split('T')[0];
-
-      const response = await fetch('/api/bookings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          date: testDate,
-          timeSlot: '10:00',
-          duration: 60,
-          menuId: 'first-free',
-          customerName: 'テスト 太郎',
-          customerPhone: '090-1234-5678',
-          customerEmail: 'test@example.com',
-          notes: 'テスト予約です'
-        })
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert('✅ テスト予約が作成されました！');
-        loadBookings();
-      } else {
-        alert('❌ エラー: ' + data.error);
-      }
-    } catch (error) {
-      alert('❌ テスト予約の作成に失敗しました');
-    }
-  };
 
   const filteredBookings = selectedDate 
     ? bookings.filter(booking => booking.date === selectedDate)
@@ -97,27 +62,49 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          {/* ヘッダー */}
-          <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">
-              📊 予約管理画面
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 via-white to-pink-50">
+      {/* ヘッダー */}
+      <header className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-pink-100">
+        <div className="max-w-6xl mx-auto px-6 py-8">
+          <div className="text-center">
+            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-pink-500 to-rose-600 rounded-full flex items-center justify-center shadow-lg">
+              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-2">
+              管理画面
             </h1>
+            <p className="text-gray-600 text-lg">予約状況一覧</p>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-pink-100">
+          {/* コントロールパネル */}
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-800">コントロールパネル</h2>
+            </div>
             <div className="flex gap-4">
               <button
                 onClick={loadBookings}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                className="px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-xl hover:from-blue-600 hover:to-indigo-600 transition-all duration-200 shadow-lg"
               >
                 🔄 更新
               </button>
-              <button
-                onClick={createTestBooking}
-                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+              <a
+                href="/"
+                className="px-6 py-3 bg-gradient-to-r from-gray-500 to-gray-600 text-white rounded-xl hover:from-gray-600 hover:to-gray-700 transition-all duration-200 shadow-lg"
               >
-                ➕ テスト予約作成
-              </button>
+                ← 予約画面
+              </a>
             </div>
           </div>
 
@@ -218,7 +205,6 @@ export default function AdminPage() {
                       </td>
                       <td className="border border-gray-200 px-4 py-3 text-sm">
                         <div>📞 {booking.customerPhone}</div>
-                        <div className="text-gray-600 text-xs">✉️ {booking.customerEmail}</div>
                       </td>
                       <td className="border border-gray-200 px-4 py-3 text-sm">
                         <code className="bg-gray-100 px-2 py-1 rounded text-xs">

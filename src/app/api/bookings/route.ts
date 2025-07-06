@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     
     // バリデーション
-    const requiredFields = ['date', 'timeSlot', 'menuId', 'customerName', 'customerPhone', 'customerEmail'];
+    const requiredFields = ['date', 'timeSlot', 'menuId', 'customerName', 'customerPhone'];
     for (const field of requiredFields) {
       if (!body[field]) {
         return NextResponse.json(
@@ -119,7 +119,6 @@ export async function POST(request: NextRequest) {
       menuId: body.menuId,
       customerName: body.customerName,
       customerPhone: body.customerPhone,
-      customerEmail: body.customerEmail,
       notes: body.notes || '',
       createdAt: new Date().toISOString()
     };

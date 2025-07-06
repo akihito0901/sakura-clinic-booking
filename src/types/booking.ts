@@ -21,7 +21,6 @@ export interface Booking {
   menuId: string;
   customerName: string;
   customerPhone: string;
-  customerEmail: string;
   notes?: string;
   createdAt: string;
 }

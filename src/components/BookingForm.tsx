@@ -10,7 +10,6 @@ interface BookingFormProps {
   onSubmit: (formData: {
     customerName: string;
     customerPhone: string;
-    customerEmail: string;
     notes: string;
   }) => void;
   onBack: () => void;
@@ -26,7 +25,6 @@ export default function BookingForm({
   const [formData, setFormData] = useState({
     customerName: '',
     customerPhone: '',
-    customerEmail: '',
     notes: ''
   });
 
@@ -45,12 +43,6 @@ export default function BookingForm({
       newErrors.customerPhone = '電話番号を入力してください';
     } else if (!/^[0-9\-]+$/.test(formData.customerPhone)) {
       newErrors.customerPhone = '正しい電話番号を入力してください';
-    }
-    
-    if (!formData.customerEmail.trim()) {
-      newErrors.customerEmail = 'メールアドレスを入力してください';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.customerEmail)) {
-      newErrors.customerEmail = '正しいメールアドレスを入力してください';
     }
     
     if (Object.keys(newErrors).length > 0) {
@@ -142,25 +134,6 @@ export default function BookingForm({
           )}
         </div>
 
-        {/* メールアドレス */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            メールアドレス <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="email"
-            value={formData.customerEmail}
-            onChange={(e) => handleChange('customerEmail', e.target.value)}
-            className={`
-              w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200
-              ${errors.customerEmail ? 'border-red-500' : 'border-gray-300'}
-            `}
-            placeholder="example@email.com"
-          />
-          {errors.customerEmail && (
-            <p className="mt-1 text-sm text-red-600">{errors.customerEmail}</p>
-          )}
-        </div>
 
         {/* 備考 */}
         <div>

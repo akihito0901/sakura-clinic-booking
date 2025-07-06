@@ -10,7 +10,6 @@ interface BookingConfirmationProps {
   customerData: {
     customerName: string;
     customerPhone: string;
-    customerEmail: string;
     notes: string;
   };
   onNewBooking: () => void;
@@ -95,11 +94,6 @@ export default function BookingConfirmation({
           <div className="flex justify-between">
             <span className="text-gray-600">電話番号:</span>
             <span className="font-medium">{customerData.customerPhone}</span>
-          </div>
-          
-          <div className="flex justify-between">
-            <span className="text-gray-600">メール:</span>
-            <span className="font-medium">{customerData.customerEmail}</span>
           </div>
           
           {customerData.notes && (
