@@ -16,6 +16,13 @@ export const MENU_ITEMS: MenuItem[] = [
     description: '肩こり・腰痛などの一般的な症状に対応（初診料2000円、2回目以降800円）'
   },
   {
+    id: 'general-with-eye-care',
+    name: '一般施術＋眼精疲労ケア',
+    duration: 30,
+    price: 1800,
+    description: '一般施術に眼精疲労ケアをプラス（初診料2000円、2回目以降1800円）'
+  },
+  {
     id: 'postnatal-regular',
     name: '産後骨盤矯正',
     duration: 60,
@@ -24,13 +31,7 @@ export const MENU_ITEMS: MenuItem[] = [
   }
 ];
 
-// 眼精疲労オプション
-export const EYE_CARE_OPTION: EyeCareOption = {
-  name: '眼精疲労ケア',
-  priceFirst: 1000,
-  priceRegular: 1500,
-  description: 'PC作業による目の疲れ・頭痛の改善'
-};
+// 眼精疲労は一般施術とセットメニューに統合
 
 export const BUSINESS_HOURS: BusinessHours = {
   start: '10:00',
