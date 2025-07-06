@@ -39,16 +39,17 @@ export default function BookingConfirmation({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 text-center">
+    <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 text-center border border-pink-100">
       {/* 成功アイコン */}
-      <div className="mb-6">
-        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <svg className="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="mb-8">
+        <div className="w-24 h-24 bg-gradient-to-r from-pink-100 to-rose-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg className="w-12 h-12 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="text-2xl font-bold text-green-600 mb-2">予約完了！</h2>
-        <p className="text-gray-600">ご予約が正常に受け付けられました</p>
+        <div className="text-2xl mb-3">🌸</div>
+        <h2 className="text-3xl font-bold text-pink-600 mb-3">予約完了！</h2>
+        <p className="text-gray-600 text-lg">ご予約が正常に受け付けられました</p>
       </div>
 
       {/* 予約詳細 */}
@@ -86,8 +87,8 @@ export default function BookingConfirmation({
           
           <div className="flex justify-between">
             <span className="text-gray-600">料金:</span>
-            <span className="font-medium text-blue-600">
-              {selectedMenu.price === 0 ? '無料' : `¥${selectedMenu.price.toLocaleString()}`}
+            <span className="font-medium text-pink-600">
+              {selectedMenu.price === 0 ? '無料' : selectedMenu.price === null ? '要相談' : `¥${selectedMenu.price.toLocaleString()}`}
             </span>
           </div>
           
@@ -136,7 +137,7 @@ export default function BookingConfirmation({
       {/* アクション */}
       <button
         onClick={onNewBooking}
-        className="w-full bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors font-medium"
+        className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white px-8 py-4 rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium text-lg transform hover:scale-105"
       >
         新しい予約を作成
       </button>

@@ -83,17 +83,20 @@ export default function BookingForm({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6">
-      <div className="mb-6">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">お客様情報の入力</h3>
+    <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-pink-100">
+      <div className="mb-8">
+        <div className="text-center mb-6">
+          <div className="text-2xl mb-3">📝</div>
+          <h3 className="text-2xl font-bold text-gray-800 mb-3">お客様情報の入力</h3>
+        </div>
         
         {/* 予約内容確認 */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-          <h4 className="font-medium text-blue-800 mb-2">予約内容</h4>
-          <div className="text-blue-700 text-sm space-y-1">
+        <div className="bg-gradient-to-r from-pink-50 to-rose-50 border border-pink-200 rounded-xl p-5 mb-6">
+          <h4 className="font-bold text-pink-800 mb-3 text-center">📋 予約内容</h4>
+          <div className="text-pink-700 text-sm space-y-2">
             <div>日時: {formatDateDisplay(selectedDate)} {selectedTimeSlot} 〜 {getEndTime(selectedTimeSlot, selectedMenu.duration)}</div>
             <div>施術: {selectedMenu.name} ({selectedMenu.duration}分)</div>
-            <div>料金: {selectedMenu.price === 0 ? '無料' : `¥${selectedMenu.price.toLocaleString()}`}</div>
+            <div>料金: {selectedMenu.price === 0 ? '無料' : selectedMenu.price === null ? '要相談' : `¥${selectedMenu.price.toLocaleString()}`}</div>
           </div>
         </div>
       </div>
@@ -109,7 +112,7 @@ export default function BookingForm({
             value={formData.customerName}
             onChange={(e) => handleChange('customerName', e.target.value)}
             className={`
-              w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent
+              w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200
               ${errors.customerName ? 'border-red-500' : 'border-gray-300'}
             `}
             placeholder="田中 太郎"
@@ -129,7 +132,7 @@ export default function BookingForm({
             value={formData.customerPhone}
             onChange={(e) => handleChange('customerPhone', e.target.value)}
             className={`
-              w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent
+              w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200
               ${errors.customerPhone ? 'border-red-500' : 'border-gray-300'}
             `}
             placeholder="090-1234-5678"
@@ -149,7 +152,7 @@ export default function BookingForm({
             value={formData.customerEmail}
             onChange={(e) => handleChange('customerEmail', e.target.value)}
             className={`
-              w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent
+              w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200
               ${errors.customerEmail ? 'border-red-500' : 'border-gray-300'}
             `}
             placeholder="example@email.com"
@@ -168,23 +171,23 @@ export default function BookingForm({
             value={formData.notes}
             onChange={(e) => handleChange('notes', e.target.value)}
             rows={4}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
             placeholder="痛みの箇所や症状、ご要望などがあればお書きください"
           />
         </div>
 
         {/* ボタン */}
-        <div className="flex gap-4 pt-6">
+        <div className="flex gap-4 pt-8">
           <button
             type="button"
             onClick={onBack}
-            className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+            className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200"
           >
             戻る
           </button>
           <button
             type="submit"
-            className="flex-1 px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors font-medium"
+            className="flex-1 px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium transform hover:scale-105"
           >
             予約を確定する
           </button>
