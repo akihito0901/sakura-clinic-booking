@@ -81,15 +81,31 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // 既存予約との重複チェック
+    // 既存予約との重複チェック（時間帯の重複も含む）
     const existingBookings = await getAllBookings();
-    const conflictingBooking = existingBookings.find(booking => 
-      booking.date === body.date && booking.timeSlot === body.timeSlot
-    );
+    
+    // 新しい予約の開始・終了時間を計算
+    const parseTime = (timeString: string): number => {
+      const [hours, minutes] = timeString.split(':').map(Number);
+      return hours * 60 + minutes;
+    };
+    
+    const newBookingStart = parseTime(body.timeSlot);
+    const newBookingEnd = newBookingStart + body.duration;
+    
+    const conflictingBooking = existingBookings.find(booking => {
+      if (booking.date !== body.date) return false;
+      
+      const existingStart = parseTime(booking.timeSlot);
+      const existingEnd = existingStart + booking.duration;
+      
+      // 時間帯の重複をチェック
+      return (newBookingStart < existingEnd && newBookingEnd > existingStart);
+    });
     
     if (conflictingBooking) {
       return NextResponse.json(
-        { error: 'この時間は既に予約が入っています' },
+        { error: 'この時間帯は既に予約が入っています。別の時間をお選びください。' },
         { status: 409 }
       );
     }
