@@ -27,9 +27,8 @@ export default function MenuSelection({ selectedMenu, onMenuSelect, onNext }: Me
           const isSelected = selectedMenu?.id === menu.id;
           
           return (
-            <button
+            <div
               key={menu.id}
-              onClick={() => onMenuSelect(menu)}
               className={`
                 group relative p-4 md:p-8 rounded-xl md:rounded-2xl border text-left transition-all duration-200 w-full
                 ${isSelected
@@ -104,35 +103,23 @@ export default function MenuSelection({ selectedMenu, onMenuSelect, onNext }: Me
                 )}
               </div>
               
-              {/* タップ用のCTAボタン */}
-              {isSelected && (
-                <div className="mt-4 p-3 bg-gradient-to-r from-pink-100 to-rose-100 rounded-lg border border-pink-200">
-                  <div className="text-center">
-                    <div className="text-pink-700 font-medium text-sm mb-2">
-                      ✓ 選択済み
-                    </div>
-                    <div className="text-xs text-pink-600">
-                      下の「日程選択へ」ボタンをタップしてください
-                    </div>
-                  </div>
-                </div>
-              )}
-            </button>
+              {/* 各メニューの予約ボタン */}
+              <div className="mt-4">
+                <button
+                  onClick={() => {
+                    onMenuSelect(menu);
+                    setTimeout(() => onNext && onNext(), 100);
+                  }}
+                  className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-3 md:py-4 px-4 md:px-6 rounded-lg md:rounded-xl font-bold text-sm md:text-base shadow-lg active:scale-95 transition-all duration-150"
+                >
+                  📋 これを予約する
+                </button>
+              </div>
+            </div>
           );
         })}
       </div>
 
-      {/* 日程選択ボタン */}
-      {selectedMenu && (
-        <div className="mt-6 md:mt-8">
-          <button
-            onClick={onNext}
-            className="w-full bg-gradient-to-r from-pink-500 to-rose-500 text-white py-4 md:py-5 px-6 rounded-xl md:rounded-2xl font-bold text-lg md:text-xl shadow-xl active:scale-95 transition-transform duration-150"
-          >
-            📅 日程選択へ進む
-          </button>
-        </div>
-      )}
 
       {/* ホームページリンク */}
       <div className="mt-6 md:mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/50 rounded-xl md:rounded-2xl p-4 md:p-6">

@@ -13,7 +13,7 @@ export const MENU_ITEMS: MenuItem[] = [
     name: '一般施術',
     duration: 15,
     price: 800,
-    description: '肩こり・腰痛などの一般的な症状に対応（初診料2000円、2回目以降800円）'
+    description: '保険を使った治療（初診料2000円、2回目以降は保険代800円）'
   },
   {
     id: 'general-with-eye-care',
