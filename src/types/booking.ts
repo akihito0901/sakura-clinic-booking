@@ -9,8 +9,6 @@ export interface MenuItem {
   id: string;
   name: string;
   duration: number; // 分
-  price: number | null; // nullは料金表示なし
-  description: string;
 }
 
 export interface Booking {

@@ -84,12 +84,6 @@ export default function BookingConfirmation({
             <span className="font-medium">{selectedMenu.duration}分</span>
           </div>
           
-          <div className="flex justify-between">
-            <span className="text-gray-600">料金:</span>
-            <span className="font-medium text-pink-600">
-              {selectedMenu.price === 0 ? '無料' : selectedMenu.price === null ? '要相談' : `¥${selectedMenu.price.toLocaleString()}`}
-            </span>
-          </div>
           
           <div className="flex justify-between">
             <span className="text-gray-600">電話番号:</span>

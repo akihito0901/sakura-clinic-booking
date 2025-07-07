@@ -88,7 +88,6 @@ export default function BookingForm({
           <div className="text-pink-700 text-sm space-y-2">
             <div>日時: {formatDateDisplay(selectedDate)} {selectedTimeSlot} 〜 {getEndTime(selectedTimeSlot, selectedMenu.duration)}</div>
             <div>施術: {selectedMenu.name} ({selectedMenu.duration}分)</div>
-            <div>料金: {selectedMenu.price === 0 ? '無料' : selectedMenu.price === null ? '要相談' : `¥${selectedMenu.price.toLocaleString()}`}</div>
           </div>
         </div>
       </div>
