@@ -77,6 +77,19 @@ export default function BookingForm({
 
   return (
     <div className="bg-white/90 backdrop-blur-sm rounded-2xl md:rounded-3xl shadow-2xl p-6 md:p-8 border border-pink-100">
+      {/* 戻るボタン（上部） */}
+      <div className="mb-4">
+        <button
+          onClick={onBack}
+          className="inline-flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-all duration-200"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          時間選択に戻る
+        </button>
+      </div>
+
       <div className="mb-6 md:mb-8">
         <div className="text-center mb-6">
           <div className="text-3xl md:text-4xl mb-4">📝</div>
@@ -148,20 +161,13 @@ export default function BookingForm({
           />
         </div>
 
-        {/* ボタン */}
-        <div className="flex flex-col sm:flex-row gap-4 pt-6">
-          <button
-            type="button"
-            onClick={onBack}
-            className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200"
-          >
-            戻る
-          </button>
+        {/* 送信ボタン */}
+        <div className="pt-6">
           <button
             type="submit"
-            className="flex-1 px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium active:scale-95"
+            className="w-full px-6 py-4 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium active:scale-95 text-lg"
           >
-            予約を確定する
+            📋 予約を確定する
           </button>
         </div>
       </form>

@@ -186,7 +186,20 @@ export default function BookingPage() {
         )}
 
         {currentStep === 'date' && selectedMenu && (
-          <div className="space-y-8">
+          <div className="space-y-6">
+            {/* 戻るボタン */}
+            <div>
+              <button
+                onClick={handleBack}
+                className="inline-flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 hover:bg-white/50 rounded-lg transition-all duration-200"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                メニュー選択に戻る
+              </button>
+            </div>
+            
             <div className="text-center">
               <div className="text-2xl mb-3">📅</div>
               <h2 className="text-2xl font-bold text-gray-800 mb-3">ご希望の日付を選択してください</h2>
@@ -199,19 +212,24 @@ export default function BookingPage() {
               selectedDate={selectedDate}
               onDateSelect={handleDateSelect}
             />
-            <div className="text-center">
-              <button
-                onClick={handleBack}
-                className="px-6 py-3 text-gray-600 hover:text-gray-800 transition-all duration-200 rounded-lg hover:bg-white/50"
-              >
-                ← メニュー選択に戻る
-              </button>
-            </div>
           </div>
         )}
 
         {currentStep === 'time' && selectedDate && selectedMenu && (
-          <div className="space-y-8">
+          <div className="space-y-6">
+            {/* 戻るボタン */}
+            <div>
+              <button
+                onClick={handleBack}
+                className="inline-flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 hover:bg-white/50 rounded-lg transition-all duration-200"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                日付選択に戻る
+              </button>
+            </div>
+            
             <TimeSlots
               selectedDate={selectedDate}
               selectedMenu={selectedMenu}
@@ -219,14 +237,6 @@ export default function BookingPage() {
               onTimeSlotSelect={handleTimeSlotSelect}
               existingBookings={existingBookings}
             />
-            <div className="text-center">
-              <button
-                onClick={handleBack}
-                className="px-6 py-3 text-gray-600 hover:text-gray-800 transition-all duration-200 rounded-lg hover:bg-white/50"
-              >
-                ← 日付選択に戻る
-              </button>
-            </div>
           </div>
         )}
 

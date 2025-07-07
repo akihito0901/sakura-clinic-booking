@@ -69,11 +69,13 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    console.log('Booking request body:', body);
     
     // バリデーション
     const requiredFields = ['date', 'timeSlot', 'menuId', 'customerName', 'customerPhone'];
     for (const field of requiredFields) {
       if (!body[field]) {
+        console.log(`Missing field: ${field}`);
         return NextResponse.json(
           { error: `${field} は必須項目です` },
           { status: 400 }
