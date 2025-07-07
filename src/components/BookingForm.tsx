@@ -61,9 +61,10 @@ export default function BookingForm({
   };
 
   const formatDateDisplay = (dateString: string) => {
-    const date = new Date(dateString);
+    const [year, month, day] = dateString.split('-');
+    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
     const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
-    return `${date.getMonth() + 1}月${date.getDate()}日（${dayNames[date.getDay()]}）`;
+    return `${parseInt(month)}月${parseInt(day)}日（${dayNames[date.getDay()]}）`;
   };
 
   const getEndTime = (startTime: string, duration: number) => {

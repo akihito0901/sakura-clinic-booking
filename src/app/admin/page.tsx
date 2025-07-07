@@ -32,9 +32,10 @@ export default function AdminPage() {
   };
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+    const [year, month, day] = dateString.split('-');
+    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
     const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
-    return `${date.getMonth() + 1}/${date.getDate()} (${dayNames[date.getDay()]})`;
+    return `${parseInt(month)}/${parseInt(day)} (${dayNames[date.getDay()]})`;
   };
 
   const getEndTime = (startTime: string, duration: number) => {

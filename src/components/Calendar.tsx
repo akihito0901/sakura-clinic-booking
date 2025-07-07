@@ -38,8 +38,10 @@ export default function Calendar({ selectedDate, onDateSelect }: CalendarProps) 
   };
 
   const formatDate = (day: number) => {
-    const date = new Date(currentYear, currentMonth, day);
-    return date.toISOString().split('T')[0];
+    const year = currentYear;
+    const month = (currentMonth + 1).toString().padStart(2, '0');
+    const dayStr = day.toString().padStart(2, '0');
+    return `${year}-${month}-${dayStr}`;
   };
 
   const renderCalendarDays = () => {
