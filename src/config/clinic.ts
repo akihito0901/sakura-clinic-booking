@@ -4,9 +4,9 @@ export const MENU_ITEMS: MenuItem[] = [
   {
     id: 'first-free',
     name: '初回無料体験',
-    duration: 60,
+    duration: 45,
     price: 0,
-    description: 'どんな施術も体験できます！完全無料でじっくり60分'
+    description: '初めての方はとりあえずこれ！お体の状態をチェックして最適な施術をご提案します'
   },
   {
     id: 'general-regular',
