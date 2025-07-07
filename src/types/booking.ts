@@ -37,18 +37,3 @@ export interface EyeCareOption {
   priceRegular: number;
   description: string;
 }
-
-export interface User {
-  id: string;
-  email: string;
-  name: string;
-  phone?: string;
-  isFirstTime: boolean;
-  createdAt: string;
-  lastLoginAt: string;
-}
-
-export interface AuthSession {
-  userId: string;
-  expiresAt: string;
-}

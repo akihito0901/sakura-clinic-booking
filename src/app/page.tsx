@@ -7,12 +7,10 @@ import TimeSlots from '@/components/TimeSlots';
 import BookingForm from '@/components/BookingForm';
 import BookingConfirmation from '@/components/BookingConfirmation';
 import { MenuItem } from '@/types/booking';
-import { useAuth } from '@/contexts/AuthContext';
 
 type Step = 'menu' | 'date' | 'time' | 'form' | 'confirmation';
 
 export default function BookingPage() {
-  const { user, logout } = useAuth();
   const [currentStep, setCurrentStep] = useState<Step>('menu');
   const [selectedMenu, setSelectedMenu] = useState<MenuItem | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -89,15 +87,6 @@ export default function BookingPage() {
         throw new Error(data.error || '予約の作成に失敗しました');
       }
 
-      // 予約成功後、ユーザーの初回フラグを更新
-      try {
-        await fetch('/api/auth/update-first-time', {
-          method: 'POST'
-        });
-      } catch (error) {
-        console.log('初回フラグ更新エラー:', error);
-        // エラーが発生しても予約は成功しているので続行
-      }
 
       setCompletedBooking({
         ...data.booking,
@@ -153,32 +142,12 @@ export default function BookingPage() {
       {/* ヘッダー */}
       <header className="bg-white/80 backdrop-blur-sm shadow-lg border-b border-pink-100">
         <div className="max-w-4xl mx-auto px-4 py-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="text-2xl">🌸</div>
-              <div>
-                <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
-                  桜並木駅前の整骨院
-                </h1>
-                <p className="text-gray-600 text-sm md:text-base">オンライン予約システム</p>
-              </div>
-            </div>
-            
-            {/* ログイン状態表示 */}
-            {user && (
-              <div className="flex items-center gap-3 text-sm">
-                <div className="text-green-600">
-                  <span className="hidden sm:inline">👤 {user.name}さん</span>
-                  <span className="sm:hidden">👤</span>
-                </div>
-                <button
-                  onClick={logout}
-                  className="text-gray-500 hover:text-gray-700 underline"
-                >
-                  ログアウト
-                </button>
-              </div>
-            )}
+          <div className="text-center">
+            <div className="text-3xl mb-2">🌸</div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent mb-2">
+              桜並木駅前の整骨院
+            </h1>
+            <p className="text-gray-600 text-lg">オンライン予約システム</p>
           </div>
           
           {/* プログレスバー */}

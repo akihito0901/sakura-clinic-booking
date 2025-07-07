@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 import { MenuItem } from '@/types/booking';
-import { useAuth } from '@/contexts/AuthContext';
-import AuthModal from './AuthModal';
 
 interface BookingFormProps {
   selectedDate: string;
@@ -24,14 +22,13 @@ export default function BookingForm({
   onSubmit,
   onBack
 }: BookingFormProps) {
-  const { user, logout } = useAuth();
   const [formData, setFormData] = useState({
-    customerName: user?.name || '',
-    customerPhone: user?.phone || '',
+    customerName: '',
+    customerPhone: '',
     notes: ''
   });
+
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [showAuthModal, setShowAuthModal] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,10 +39,9 @@ export default function BookingForm({
       newErrors.customerName = 'お名前を入力してください';
     }
     
-    // 初回の方のみ電話番号必須
-    if (user?.isFirstTime && !formData.customerPhone.trim()) {
-      newErrors.customerPhone = '初回の方は電話番号を入力してください';
-    } else if (formData.customerPhone && !/^[0-9\-]+$/.test(formData.customerPhone)) {
+    if (!formData.customerPhone.trim()) {
+      newErrors.customerPhone = '電話番号を入力してください';
+    } else if (!/^[0-9\-]+$/.test(formData.customerPhone)) {
       newErrors.customerPhone = '正しい電話番号を入力してください';
     }
     
@@ -78,87 +74,14 @@ export default function BookingForm({
     return `${endHours.toString().padStart(2, '0')}:${endMins.toString().padStart(2, '0')}`;
   };
 
-  // ログインしていない場合のUI
-  if (!user) {
-    return (
-      <>
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl md:rounded-3xl shadow-2xl p-6 md:p-8 border border-pink-100 text-center">
-          <div className="mb-6">
-            <div className="text-4xl mb-4">🔐</div>
-            <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-3">ログインが必要です</h3>
-            <p className="text-gray-600 text-sm md:text-base mb-6">
-              予約を続行するには、ログインまたは新規登録をしてください。<br />
-              一度登録すると、次回から入力の手間が省けます！
-            </p>
-          </div>
-
-          {/* 予約内容確認 */}
-          <div className="bg-gradient-to-r from-pink-50 to-rose-50 border border-pink-200 rounded-xl p-4 md:p-5 mb-6">
-            <h4 className="font-bold text-pink-800 mb-3 text-center">📋 予約内容</h4>
-            <div className="text-pink-700 text-sm space-y-2">
-              <div>日時: {formatDateDisplay(selectedDate)} {selectedTimeSlot} 〜 {getEndTime(selectedTimeSlot, selectedMenu.duration)}</div>
-              <div>施術: {selectedMenu.name} ({selectedMenu.duration}分)</div>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4">
-            <button
-              onClick={onBack}
-              className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-200"
-            >
-              戻る
-            </button>
-            <button
-              onClick={() => setShowAuthModal(true)}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-pink-500 to-rose-500 text-white rounded-xl hover:from-pink-600 hover:to-rose-600 transition-all duration-200 font-medium"
-            >
-              ログイン・登録
-            </button>
-          </div>
-        </div>
-
-        <AuthModal
-          isOpen={showAuthModal}
-          onClose={() => setShowAuthModal(false)}
-          onSuccess={(loggedInUser) => {
-            setShowAuthModal(false);
-            // ユーザー情報で自動入力
-            setFormData(prev => ({
-              ...prev,
-              customerName: loggedInUser?.name || '',
-              customerPhone: loggedInUser?.phone || ''
-            }));
-          }}
-        />
-      </>
-    );
-  }
-
-  // ログイン済みの場合のUI
   return (
     <div className="bg-white/90 backdrop-blur-sm rounded-2xl md:rounded-3xl shadow-2xl p-6 md:p-8 border border-pink-100">
       <div className="mb-6 md:mb-8">
         <div className="text-center mb-6">
           <div className="text-3xl md:text-4xl mb-4">📝</div>
-          <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-3">予約内容の確認</h3>
+          <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-3">お客様情報の入力</h3>
         </div>
         
-        {/* ユーザー情報表示 */}
-        <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-4 md:p-5 mb-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h4 className="font-bold text-green-800 mb-1">👤 ログイン中</h4>
-              <p className="text-green-700 text-sm">{user.email}</p>
-            </div>
-            <button
-              onClick={logout}
-              className="text-green-600 hover:text-green-700 text-sm underline"
-            >
-              ログアウト
-            </button>
-          </div>
-        </div>
-
         {/* 予約内容確認 */}
         <div className="bg-gradient-to-r from-pink-50 to-rose-50 border border-pink-200 rounded-xl p-4 md:p-5 mb-6">
           <h4 className="font-bold text-pink-800 mb-3 text-center">📋 予約内容</h4>
@@ -193,8 +116,7 @@ export default function BookingForm({
         {/* 電話番号 */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            電話番号 {user.isFirstTime && <span className="text-red-500">*</span>}
-            {!user.isFirstTime && <span className="text-gray-500 text-xs ml-1">(任意)</span>}
+            電話番号 <span className="text-red-500">*</span>
           </label>
           <input
             type="tel"
@@ -206,9 +128,6 @@ export default function BookingForm({
             `}
             placeholder="090-1234-5678"
           />
-          {user.isFirstTime && (
-            <p className="text-xs text-gray-500 mt-1">初回の方は連絡先として必要です</p>
-          )}
           {errors.customerPhone && (
             <p className="mt-1 text-sm text-red-600">{errors.customerPhone}</p>
           )}
