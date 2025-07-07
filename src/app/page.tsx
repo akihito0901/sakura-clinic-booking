@@ -175,11 +175,12 @@ export default function BookingPage() {
       </header>
 
       {/* メインコンテンツ */}
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main className="max-w-4xl mx-auto px-3 md:px-4 py-4 md:py-8">
         {currentStep === 'menu' && (
           <MenuSelection
             selectedMenu={selectedMenu}
             onMenuSelect={handleMenuSelect}
+            onNext={() => selectedMenu && setCurrentStep('date')}
           />
         )}
 
