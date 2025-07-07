@@ -16,7 +16,7 @@ export default function MenuSelection({ selectedMenu, onMenuSelect, onNext }: Me
       <div className="text-center mb-6 md:mb-8">
         <div className="text-4xl md:text-5xl mb-4">🌸</div>
         <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">施術メニューを選択</h2>
-        <p className="text-gray-600 text-base md:text-lg">最適な施術をお選びください</p>
+        <p className="text-gray-600 text-base md:text-lg">カードをタップして選択してください</p>
       </div>
 
       {/* メニューカード一覧 */}
@@ -27,8 +27,9 @@ export default function MenuSelection({ selectedMenu, onMenuSelect, onNext }: Me
               case 'first-free':
                 return '/images/予約.jpeg';
               case 'general-regular':
-              case 'general-with-eye-care':
                 return '/images/深層筋.jpg';
+              case 'general-with-eye-care':
+                return '/images/眼精疲労.jpg';
               case 'postnatal-regular':
                 return '/images/骨盤調整.jpeg';
               default:
@@ -39,7 +40,11 @@ export default function MenuSelection({ selectedMenu, onMenuSelect, onNext }: Me
           return (
             <div
               key={menu.id}
-              className="relative overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl bg-white group hover:shadow-3xl transition-all duration-300"
+              onClick={() => {
+                onMenuSelect(menu);
+                setTimeout(() => onNext && onNext(), 100);
+              }}
+              className="relative overflow-hidden rounded-2xl md:rounded-3xl shadow-2xl bg-white group hover:shadow-3xl transition-all duration-300 cursor-pointer active:scale-95"
             >
               {/* 写真背景 */}
               <div className="relative h-48 md:h-64 lg:h-72 overflow-hidden">
@@ -68,22 +73,19 @@ export default function MenuSelection({ selectedMenu, onMenuSelect, onNext }: Me
                     <span className="text-sm font-bold">👁️ 眼精疲労ケア込み</span>
                   </div>
                 )}
+                
+                {/* タップ指示 */}
+                <div className="absolute bottom-4 right-4 bg-white/20 backdrop-blur-sm rounded-full p-2 group-hover:bg-white/30 transition-colors">
+                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
               </div>
 
               {/* コンテンツエリア */}
               <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-white">
-                <h3 className="text-xl md:text-2xl font-bold mb-3 md:mb-4">{menu.name}</h3>
-                
-                {/* 予約ボタン */}
-                <button
-                  onClick={() => {
-                    onMenuSelect(menu);
-                    setTimeout(() => onNext && onNext(), 100);
-                  }}
-                  className="w-full bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white py-3 md:py-4 px-6 rounded-xl md:rounded-2xl font-bold text-base md:text-lg shadow-xl active:scale-95 transition-all duration-200 transform hover:-translate-y-1"
-                >
-                  📋 この施術を予約する
-                </button>
+                <h3 className="text-xl md:text-2xl font-bold mb-2">{menu.name}</h3>
+                <p className="text-white/90 text-sm md:text-base">タップして選択</p>
               </div>
             </div>
           );
