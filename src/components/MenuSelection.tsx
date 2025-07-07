@@ -25,7 +25,7 @@ export default function MenuSelection({ selectedMenu, onMenuSelect, onNext }: Me
           const getImageSrc = (menuId: string) => {
             switch (menuId) {
               case 'first-free':
-                return '/images/予約.jpeg';
+                return '/images/初心者.jpg';
               case 'general-regular':
                 return '/images/深層筋.jpg';
               case 'general-with-eye-care':
@@ -33,7 +33,7 @@ export default function MenuSelection({ selectedMenu, onMenuSelect, onNext }: Me
               case 'postnatal-regular':
                 return '/images/骨盤調整.jpeg';
               default:
-                return '/images/予約.jpeg';
+                return '/images/初心者.jpg';
             }
           };
 

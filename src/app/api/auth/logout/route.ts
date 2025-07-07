@@ -10,10 +10,16 @@ export async function POST(request: NextRequest) {
     const sessionId = request.cookies.get('sessionId')?.value;
     
     if (sessionId) {
-      // セッションファイルからセッションを削除
-      const sessionsData = JSON.parse(await fs.readFile(SESSIONS_FILE, 'utf8'));
-      sessionsData.sessions = sessionsData.sessions.filter((s: AuthSession & { id: string }) => s.id !== sessionId);
-      await fs.writeFile(SESSIONS_FILE, JSON.stringify(sessionsData, null, 2));
+      try {
+        // セッションファイルからセッションを削除
+        const sessionContent = await fs.readFile(SESSIONS_FILE, 'utf8');
+        const sessionsData = JSON.parse(sessionContent);
+        sessionsData.sessions = sessionsData.sessions.filter((s: AuthSession & { id: string }) => s.id !== sessionId);
+        await fs.writeFile(SESSIONS_FILE, JSON.stringify(sessionsData, null, 2));
+      } catch (error) {
+        console.error('Failed to update sessions file:', error);
+        // エラーが発生してもログアウトは続行
+      }
     }
     
     const response = NextResponse.json({ success: true });

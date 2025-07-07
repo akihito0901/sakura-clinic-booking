@@ -18,7 +18,17 @@ export async function GET(request: NextRequest) {
     }
     
     // セッションを確認
-    const sessionsData = JSON.parse(await fs.readFile(SESSIONS_FILE, 'utf8'));
+    let sessionsData;
+    try {
+      const sessionContent = await fs.readFile(SESSIONS_FILE, 'utf8');
+      sessionsData = JSON.parse(sessionContent);
+    } catch (error) {
+      console.error('Failed to read sessions file:', error);
+      return NextResponse.json(
+        { error: 'セッションデータの読み込みに失敗しました' },
+        { status: 500 }
+      );
+    }
     const session = sessionsData.sessions.find((s: AuthSession & { id: string }) => s.id === sessionId);
     
     if (!session || new Date(session.expiresAt) <= new Date()) {
@@ -29,7 +39,17 @@ export async function GET(request: NextRequest) {
     }
     
     // ユーザー情報を取得
-    const usersData = JSON.parse(await fs.readFile(USERS_FILE, 'utf8'));
+    let usersData;
+    try {
+      const userContent = await fs.readFile(USERS_FILE, 'utf8');
+      usersData = JSON.parse(userContent);
+    } catch (error) {
+      console.error('Failed to read users file:', error);
+      return NextResponse.json(
+        { error: 'ユーザーデータの読み込みに失敗しました' },
+        { status: 500 }
+      );
+    }
     const user = usersData.users.find((u: User) => u.id === session.userId);
     
     if (!user) {

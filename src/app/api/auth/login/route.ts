@@ -11,7 +11,12 @@ async function ensureSessionsFile() {
   try {
     await fs.access(SESSIONS_FILE);
   } catch {
-    await fs.mkdir(path.dirname(SESSIONS_FILE), { recursive: true });
+    const dataDir = path.dirname(SESSIONS_FILE);
+    try {
+      await fs.mkdir(dataDir, { recursive: true });
+    } catch (error) {
+      console.error('Failed to create data directory:', error);
+    }
     await fs.writeFile(SESSIONS_FILE, JSON.stringify({ sessions: [] }, null, 2));
   }
 }
@@ -28,7 +33,17 @@ export async function POST(request: NextRequest) {
     }
     
     // ユーザーファイルを読み込み
-    const usersData = JSON.parse(await fs.readFile(USERS_FILE, 'utf8'));
+    let usersData;
+    try {
+      const fileContent = await fs.readFile(USERS_FILE, 'utf8');
+      usersData = JSON.parse(fileContent);
+    } catch (error) {
+      console.error('Failed to read users file:', error);
+      return NextResponse.json(
+        { error: 'ユーザーデータの読み込みに失敗しました' },
+        { status: 500 }
+      );
+    }
     const user = usersData.users.find((u: User & { password: string }) => u.email === email);
     
     if (!user) {
@@ -49,7 +64,14 @@ export async function POST(request: NextRequest) {
     
     // セッションを作成（2ヶ月間有効）
     await ensureSessionsFile();
-    const sessionsData = JSON.parse(await fs.readFile(SESSIONS_FILE, 'utf8'));
+    let sessionsData;
+    try {
+      const sessionContent = await fs.readFile(SESSIONS_FILE, 'utf8');
+      sessionsData = JSON.parse(sessionContent);
+    } catch (error) {
+      console.error('Failed to read sessions file:', error);
+      sessionsData = { sessions: [] };
+    }
     
     const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const expiresAt = new Date();

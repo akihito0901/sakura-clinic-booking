@@ -11,7 +11,12 @@ async function ensureUsersFile() {
   try {
     await fs.access(USERS_FILE);
   } catch {
-    await fs.mkdir(path.dirname(USERS_FILE), { recursive: true });
+    const dataDir = path.dirname(USERS_FILE);
+    try {
+      await fs.mkdir(dataDir, { recursive: true });
+    } catch (error) {
+      console.error('Failed to create data directory:', error);
+    }
     await fs.writeFile(USERS_FILE, JSON.stringify({ users: [] }, null, 2));
   }
 }
@@ -47,7 +52,14 @@ export async function POST(request: NextRequest) {
     }
     
     // 既存ユーザーファイルを読み込み
-    const usersData = JSON.parse(await fs.readFile(USERS_FILE, 'utf8'));
+    let usersData;
+    try {
+      const fileContent = await fs.readFile(USERS_FILE, 'utf8');
+      usersData = JSON.parse(fileContent);
+    } catch (error) {
+      console.error('Failed to read users file:', error);
+      usersData = { users: [] };
+    }
     
     // 重複チェック
     const existingUser = usersData.users.find((user: User) => user.email === email);
