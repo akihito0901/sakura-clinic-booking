@@ -25,10 +25,14 @@ export async function POST(request: NextRequest) {
   try {
     await ensureUsersFile();
     
-    const { email, password, name, phone } = await request.json();
+    const body = await request.json();
+    const { email, password, name, phone } = body;
+    
+    console.log('Register request body:', body);
     
     // バリデーション
     if (!email || !password || !name) {
+      console.log('Missing required fields:', { email: !!email, password: !!password, name: !!name });
       return NextResponse.json(
         { error: 'メールアドレス、パスワード、お名前は必須です' },
         { status: 400 }
