@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { Booking } from '@/types/booking';
 
 // メモリベースの一時的なデータ保存（メインのrouteと同じデータを参照）
 declare global {
-  var bookingsData: any[];
+  var bookingsData: Booking[];
 }
 
 if (!global.bookingsData) {
@@ -25,7 +26,7 @@ export async function GET(request: NextRequest) {
     console.log('🔍 予約検索:', phone);
     
     // 電話番号で検索（部分一致）
-    const matchingBookings = global.bookingsData.filter(booking => 
+    const matchingBookings = global.bookingsData.filter((booking: Booking) => 
       booking.customerPhone && booking.customerPhone.includes(phone)
     );
 
