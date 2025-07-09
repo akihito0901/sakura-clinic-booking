@@ -39,11 +39,11 @@ export default function TimeSlots({
     const lunchEndTime = hours.lunchEnd ? parseTime(hours.lunchEnd) : null;
     
     // 初回無料体験は30分刻み、その他は15分刻み
-    const interval = selectedMenu.id === 'first-free' ? 30 : 15;
+    const interval = selectedMenu.id === 'first-free-trial' ? 30 : 15;
     
     for (let time = startTime; time < endTime; time += interval) {
       // 初回無料体験は00分・30分のみ
-      if (selectedMenu.id === 'first-free') {
+      if (selectedMenu.id === 'first-free-trial') {
         const minutes = time % 60;
         if (minutes !== 0 && minutes !== 30) continue;
       }

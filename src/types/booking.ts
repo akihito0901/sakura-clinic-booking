@@ -33,9 +33,3 @@ export interface BusinessHours {
   closedDays: number[]; // [0] = 日曜日
 }
 
-export interface EyeCareOption {
-  name: string;
-  priceFirst: number;
-  priceRegular: number;
-  description: string;
-}
