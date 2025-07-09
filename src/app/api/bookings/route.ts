@@ -1,61 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
 import { Booking } from '@/types/booking';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const BOOKINGS_FILE = path.join(DATA_DIR, 'bookings.json');
+// メモリベースの一時的なデータ保存（本番環境対応）
+let bookingsData: Booking[] = [];
 
-// データディレクトリとファイルの初期化
-async function ensureDataFiles(): Promise<void> {
-  try {
-    console.log('📁 データディレクトリの確認:', DATA_DIR);
-    await fs.access(DATA_DIR);
-    console.log('✅ データディレクトリが存在します');
-  } catch (error) {
-    console.log('📁 データディレクトリを作成中...', error);
-    await fs.mkdir(DATA_DIR, { recursive: true });
-    console.log('✅ データディレクトリを作成しました');
-  }
-  
-  try {
-    console.log('📄 予約ファイルの確認:', BOOKINGS_FILE);
-    await fs.access(BOOKINGS_FILE);
-    console.log('✅ 予約ファイルが存在します');
-  } catch (error) {
-    console.log('📄 予約ファイルを作成中...', error);
-    await fs.writeFile(BOOKINGS_FILE, JSON.stringify([], null, 2));
-    console.log('✅ 予約ファイルを作成しました');
-  }
+// データ初期化（メモリベース）
+async function initializeData(): Promise<void> {
+  console.log('🔄 メモリベースのデータ初期化...');
+  console.log(`📋 現在の予約データ: ${bookingsData.length}件`);
 }
 
 // 全予約を取得
 async function getAllBookings(): Promise<Booking[]> {
-  try {
-    await ensureDataFiles();
-    console.log('📖 予約データを読み込み中...');
-    
-    const data = await fs.readFile(BOOKINGS_FILE, 'utf-8');
-    const bookings = JSON.parse(data);
-    console.log(`📋 ${bookings.length}件の予約データを読み込みました`);
-    return bookings;
-  } catch (error) {
-    console.error('❌ 予約データの読み込みエラー:', error);
-    return [];
-  }
+  await initializeData();
+  console.log('📖 予約データを読み込み中...');
+  console.log(`📋 ${bookingsData.length}件の予約データを読み込みました`);
+  return bookingsData;
 }
 
 // 予約を保存
 async function saveBookings(bookings: Booking[]): Promise<void> {
-  try {
-    await ensureDataFiles();
-    console.log(`💾 ${bookings.length}件の予約データを保存中...`);
-    await fs.writeFile(BOOKINGS_FILE, JSON.stringify(bookings, null, 2));
-    console.log('✅ 予約データを保存しました');
-  } catch (error) {
-    console.error('❌ 予約データの保存エラー:', error);
-    throw error;
-  }
+  console.log(`💾 ${bookings.length}件の予約データを保存中...`);
+  bookingsData = bookings;
+  console.log('✅ 予約データを保存しました（メモリベース）');
 }
 
 // GET: 全予約取得
