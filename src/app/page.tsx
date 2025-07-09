@@ -2,22 +2,27 @@
 
 import { useState, useEffect } from 'react';
 import Calendar from '@/components/Calendar';
-import MenuSelection from '@/components/MenuSelection';
+import CustomerTypeSelection from '@/components/CustomerTypeSelection';
+import FirstTimeMenuSelection from '@/components/FirstTimeMenuSelection';
+import ReturningMenuSelection from '@/components/ReturningMenuSelection';
 import TimeSlots from '@/components/TimeSlots';
 import BookingForm from '@/components/BookingForm';
 import BookingConfirmation from '@/components/BookingConfirmation';
+import BookingSearch from '@/components/BookingSearch';
 import { MenuItem } from '@/types/booking';
 
-type Step = 'menu' | 'date' | 'time' | 'form' | 'confirmation';
+type Step = 'customerType' | 'firstTimeMenu' | 'returningMenu' | 'date' | 'time' | 'form' | 'confirmation';
 
 export default function BookingPage() {
-  const [currentStep, setCurrentStep] = useState<Step>('menu');
+  const [currentStep, setCurrentStep] = useState<Step>('customerType');
+  const [isFirstTime, setIsFirstTime] = useState<boolean | null>(null);
   const [selectedMenu, setSelectedMenu] = useState<MenuItem | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
   const [existingBookings, setExistingBookings] = useState<{ time: string; duration: number }[]>([]);
   const [completedBooking, setCompletedBooking] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showBookingSearch, setShowBookingSearch] = useState(false);
 
   // 既存予約を取得
   const fetchExistingBookings = async (date: string) => {
@@ -42,6 +47,16 @@ export default function BookingPage() {
     setSelectedTimeSlot(null);
     fetchExistingBookings(date);
     setCurrentStep('time');
+  };
+
+  // 顧客タイプ選択時の処理
+  const handleCustomerTypeSelect = (firstTime: boolean) => {
+    setIsFirstTime(firstTime);
+    if (firstTime) {
+      setCurrentStep('firstTimeMenu');
+    } else {
+      setCurrentStep('returningMenu');
+    }
   };
 
   // メニュー選択時の処理
@@ -77,6 +92,7 @@ export default function BookingPage() {
           timeSlot: selectedTimeSlot,
           duration: selectedMenu.duration,
           menuId: selectedMenu.id,
+          isFirstTime: isFirstTime,
           ...formData
         })
       });
@@ -105,7 +121,8 @@ export default function BookingPage() {
 
   // 新しい予約作成
   const handleNewBooking = () => {
-    setCurrentStep('menu');
+    setCurrentStep('customerType');
+    setIsFirstTime(null);
     setSelectedMenu(null);
     setSelectedDate(null);
     setSelectedTimeSlot(null);
@@ -116,8 +133,12 @@ export default function BookingPage() {
   // 戻るボタンの処理
   const handleBack = () => {
     switch (currentStep) {
+      case 'firstTimeMenu':
+      case 'returningMenu':
+        setCurrentStep('customerType');
+        break;
       case 'date':
-        setCurrentStep('menu');
+        setCurrentStep(isFirstTime ? 'firstTimeMenu' : 'returningMenu');
         break;
       case 'time':
         setCurrentStep('date');
@@ -129,12 +150,20 @@ export default function BookingPage() {
   };
 
   const getStepNumber = () => {
-    const steps = { menu: 1, date: 2, time: 3, form: 4, confirmation: 5 };
+    const steps = { 
+      customerType: 1, 
+      firstTimeMenu: 2, 
+      returningMenu: 2, 
+      date: 3, 
+      time: 4, 
+      form: 5, 
+      confirmation: 6 
+    };
     return steps[currentStep];
   };
 
   const getTotalSteps = () => {
-    return currentStep === 'confirmation' ? 5 : 4;
+    return currentStep === 'confirmation' ? 6 : 5;
   };
 
   return (
@@ -148,6 +177,17 @@ export default function BookingPage() {
               桜並木駅前の整骨院
             </h1>
             <p className="text-gray-600 text-lg">オンライン予約システム</p>
+            
+            {/* 予約検索ボタン */}
+            <button
+              onClick={() => setShowBookingSearch(true)}
+              className="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 hover:bg-blue-200 rounded-lg transition-colors text-sm font-medium"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              📞 予約を検索
+            </button>
           </div>
           
           {/* プログレスバー */}
@@ -158,7 +198,9 @@ export default function BookingPage() {
                   ステップ {getStepNumber()} / {getTotalSteps()}
                 </span>
                 <span className="text-sm text-gray-500">
-                  {currentStep === 'menu' && '✨ メニュー選択'}
+                  {currentStep === 'customerType' && '👥 ご来院回数'}
+                  {currentStep === 'firstTimeMenu' && '✨ 初回体験'}
+                  {currentStep === 'returningMenu' && '🎯 メニュー選択'}
                   {currentStep === 'date' && '📅 日付選択'}
                   {currentStep === 'time' && '⏰ 時間選択'}
                   {currentStep === 'form' && '📝 情報入力'}
@@ -177,11 +219,24 @@ export default function BookingPage() {
 
       {/* メインコンテンツ */}
       <main className="max-w-4xl mx-auto px-3 md:px-4 py-4 md:py-8">
-        {currentStep === 'menu' && (
-          <MenuSelection
+        {currentStep === 'customerType' && (
+          <CustomerTypeSelection
+            onTypeSelect={handleCustomerTypeSelect}
+          />
+        )}
+
+        {currentStep === 'firstTimeMenu' && (
+          <FirstTimeMenuSelection
+            onMenuSelect={handleMenuSelect}
+            onBack={handleBack}
+          />
+        )}
+
+        {currentStep === 'returningMenu' && (
+          <ReturningMenuSelection
             selectedMenu={selectedMenu}
             onMenuSelect={handleMenuSelect}
-            onNext={() => selectedMenu && setCurrentStep('date')}
+            onBack={handleBack}
           />
         )}
 
@@ -273,6 +328,13 @@ export default function BookingPage() {
           </div>
         )}
       </main>
+
+      {/* 予約検索モーダル */}
+      {showBookingSearch && (
+        <BookingSearch
+          onClose={() => setShowBookingSearch(false)}
+        />
+      )}
     </div>
   );
 }

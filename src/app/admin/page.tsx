@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Booking } from '@/types/booking';
-import { MENU_ITEMS } from '@/config/clinic';
+import { ALL_MENU_ITEMS } from '@/config/clinic';
 
 export default function AdminPage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -27,7 +27,7 @@ export default function AdminPage() {
   }, []);
 
   const getMenuName = (menuId: string) => {
-    const menu = MENU_ITEMS.find(m => m.id === menuId);
+    const menu = ALL_MENU_ITEMS.find(m => m.id === menuId);
     return menu ? menu.name : menuId;
   };
 
@@ -124,9 +124,9 @@ export default function AdminPage() {
             </div>
             
             <div className="bg-purple-50 border border-purple-200 rounded-lg p-6">
-              <h3 className="font-bold text-purple-800 mb-2">⭐ 無料体験</h3>
+              <h3 className="font-bold text-purple-800 mb-2">⭐ 初回無料体験</h3>
               <div className="text-3xl font-bold text-purple-600">
-                {bookings.filter(b => b.menuId === 'first-free').length}
+                {bookings.filter(b => b.isFirstTime === true).length}
               </div>
             </div>
           </div>
@@ -203,6 +203,9 @@ export default function AdminPage() {
                       </td>
                       <td className="border border-gray-200 px-4 py-3 text-sm">
                         <div className="font-medium">{getMenuName(booking.menuId)}</div>
+                        <div className="text-xs text-gray-500 mt-1">
+                          {booking.isFirstTime ? '✨ 初回' : '🔄 リピート'}
+                        </div>
                       </td>
                       <td className="border border-gray-200 px-4 py-3 text-sm">
                         <div>📞 {booking.customerPhone}</div>
@@ -226,8 +229,11 @@ export default function AdminPage() {
           <div className="mt-8 bg-gray-50 rounded-lg p-4">
             <h3 className="font-bold text-gray-800 mb-2">💾 システム情報</h3>
             <div className="text-sm text-gray-600">
-              <div>データ保存先: <code>data/bookings.json</code></div>
+              <div>データ保存先: <code>メモリベース（一時的）</code></div>
               <div>Web完結型予約システム（外部API不要）</div>
+              <div className="text-orange-600 mt-1">
+                ⚠️ サーバー再起動時にデータはリセットされます
+              </div>
             </div>
           </div>
         </div>

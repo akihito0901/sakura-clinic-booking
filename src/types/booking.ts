@@ -9,6 +9,7 @@ export interface MenuItem {
   id: string;
   name: string;
   duration: number; // 分
+  description?: string; // メニュー説明
 }
 
 export interface Booking {
@@ -21,6 +22,7 @@ export interface Booking {
   customerPhone: string;
   notes?: string;
   createdAt: string;
+  isFirstTime?: boolean; // 初回かどうか
 }
 
 export interface BusinessHours {

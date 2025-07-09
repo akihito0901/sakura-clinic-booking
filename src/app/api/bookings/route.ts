@@ -2,26 +2,32 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Booking } from '@/types/booking';
 
 // メモリベースの一時的なデータ保存（本番環境対応）
-let bookingsData: Booking[] = [];
+declare global {
+  var bookingsData: Booking[];
+}
+
+if (!global.bookingsData) {
+  global.bookingsData = [];
+}
 
 // データ初期化（メモリベース）
 async function initializeData(): Promise<void> {
   console.log('🔄 メモリベースのデータ初期化...');
-  console.log(`📋 現在の予約データ: ${bookingsData.length}件`);
+  console.log(`📋 現在の予約データ: ${global.bookingsData.length}件`);
 }
 
 // 全予約を取得
 async function getAllBookings(): Promise<Booking[]> {
   await initializeData();
   console.log('📖 予約データを読み込み中...');
-  console.log(`📋 ${bookingsData.length}件の予約データを読み込みました`);
-  return bookingsData;
+  console.log(`📋 ${global.bookingsData.length}件の予約データを読み込みました`);
+  return global.bookingsData;
 }
 
 // 予約を保存
 async function saveBookings(bookings: Booking[]): Promise<void> {
   console.log(`💾 ${bookings.length}件の予約データを保存中...`);
-  bookingsData = bookings;
+  global.bookingsData = bookings;
   console.log('✅ 予約データを保存しました（メモリベース）');
 }
 
@@ -85,28 +91,44 @@ export async function POST(request: NextRequest) {
     const newBookingEnd = newBookingStart + (body.duration || 60); // デフォルト60分
     console.log(`⏰ 新しい予約時間: ${body.timeSlot} (${newBookingStart}分 - ${newBookingEnd}分)`);
     
-    const conflictingBooking = existingBookings.find(booking => {
-      if (booking.date !== body.date) return false;
-      
+    // 同じ日付の既存予約をフィルタリング
+    const sameDateBookings = existingBookings.filter(booking => booking.date === body.date);
+    console.log(`📅 同じ日付の既存予約: ${sameDateBookings.length}件`);
+    
+    // 各既存予約との重複チェック
+    const conflictingBooking = sameDateBookings.find(booking => {
       const existingStart = parseTime(booking.timeSlot);
       const existingEnd = existingStart + booking.duration;
       
-      // 時間帯の重複をチェック
+      console.log(`🔍 チェック中: 既存予約 ${booking.timeSlot} (${existingStart}分 - ${existingEnd}分)`);
+      
+      // 時間帯の重複をチェック（厳密な重複判定）
       const hasConflict = (newBookingStart < existingEnd && newBookingEnd > existingStart);
+      
       if (hasConflict) {
-        console.log(`⚠️ 時間帯の重複を検出: 既存予約 ${booking.timeSlot} (${existingStart}分 - ${existingEnd}分)`);
+        console.log(`⚠️ 時間帯の重複を検出:`);
+        console.log(`   新しい予約: ${body.timeSlot} - ${Math.floor(newBookingEnd / 60)}:${(newBookingEnd % 60).toString().padStart(2, '0')}`);
+        console.log(`   既存予約: ${booking.timeSlot} - ${Math.floor(existingEnd / 60)}:${(existingEnd % 60).toString().padStart(2, '0')}`);
+        console.log(`   重複範囲: ${Math.max(newBookingStart, existingStart)} - ${Math.min(newBookingEnd, existingEnd)}分`);
       }
+      
       return hasConflict;
     });
     
     if (conflictingBooking) {
       console.log('❌ 予約時間の重複により作成失敗');
+      const conflictStart = parseTime(conflictingBooking.timeSlot);
+      const conflictEnd = conflictStart + conflictingBooking.duration;
+      const conflictEndTime = `${Math.floor(conflictEnd / 60)}:${(conflictEnd % 60).toString().padStart(2, '0')}`;
+      
       return NextResponse.json(
-        { error: 'この時間帯は既に予約が入っています。別の時間をお選びください。' },
+        { 
+          error: `この時間帯は既に予約が入っています。\n既存予約: ${conflictingBooking.timeSlot} - ${conflictEndTime}\n別の時間をお選びください。` 
+        },
         { status: 409 }
       );
     }
-    console.log('✅ 重複チェック完了');
+    console.log('✅ 重複チェック完了 - 予約時間に問題なし');
 
     // 新しい予約を作成
     console.log('🆕 新しい予約を作成中...');
@@ -119,7 +141,8 @@ export async function POST(request: NextRequest) {
       customerName: body.customerName,
       customerPhone: body.customerPhone,
       notes: body.notes || '',
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      isFirstTime: body.isFirstTime || false
     };
 
     console.log('📝 作成された予約:', newBooking);
